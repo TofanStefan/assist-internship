@@ -1,10 +1,12 @@
-import {Entity,Column,PrimaryGeneratedColumn} from 'typeorm';
+import { type } from 'os';
+import { Item } from 'src/item/entities/item.entity';
+import {Entity,Column,PrimaryGeneratedColumn, OneToMany} from 'typeorm';
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
     id : number;
 
-    @Column()
+    @Column({nullable : true})
     username : string;
 
     @Column()
@@ -13,9 +15,24 @@ export class User {
     @Column()
     last_name : string;
 
-    @Column()
+    @Column({nullable :true})
     email : string
 
-    @Column()
+    @Column({nullable :true})
     password : string;
+
+    @Column({nullable :true})
+    access_token : string;
+
+    @Column({nullable :true})
+    refresh_token:string;
+
+    @Column({nullable :true})
+    strava_id : number;
+    
+    @OneToMany(type=> Item, item => item.user,{
+        cascade: true
+    })
+    item : Item[]
+
 }

@@ -7,20 +7,28 @@ import { ItemModule } from './item/item.module';
 import { Item } from './item/entities/item.entity'
 import { UserModule } from './user/user.module';
 import { User } from './user/entities/user.entity';
-const Config  :PostgresConnectionOptions =  {
-
-  type : 'postgres',
-  host : 'localhost',
-  port : 4321,
-  username : 'stefan',
-  password : '123456',
-  database :  'stefan',
-  entities : [Item,User],
-  synchronize : true,
-
-}
+import { StravaAuthModule } from './strava-auth/strava-auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { StravaActivitiesModule } from './strava-activities/strava-activities.module';
 @Module({
-  imports: [TypeOrmModule.forRoot(Config),ItemModule, UserModule],
+  imports: [
+    ConfigModule.forRoot({isGlobal: true}),
+    TypeOrmModule.forRoot(
+      {
+
+        type : "postgres",
+        host : process.env.DB_HOST,
+        port : Number(process.env.DB_PORT),
+        username : process.env.DB_USERNAME,
+        password : process.env.DB_PASSWORD,
+        database :  process.env.DB_NAME,
+        entities : [Item,User],
+        synchronize : true,
+      
+      }
+    ),
+    ItemModule, UserModule, StravaAuthModule, StravaActivitiesModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
