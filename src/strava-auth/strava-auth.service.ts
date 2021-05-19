@@ -1,8 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
+import * as moment from 'moment'
 const strava = require("strava-v3")
 
 @Injectable()
@@ -42,7 +43,8 @@ async saveAccess(code:string,scope:string):Promise<void>{
       const updateUser = this.userRepository.create(
         {
           access_token:token_exchange.access_token,
-          refresh_token:token_exchange.refresh_token
+          refresh_token:token_exchange.refresh_token,
+          expires_at : moment().add(Number(token_exchange.expires_in), 'seconds'). format('yyyy-MM-DD:hh:mm A')
       }); 
       await this.userRepository.update({strava_id : token_exchange.athlete.id},updateUser)
     } // user does not exist => create user 
@@ -55,6 +57,7 @@ async saveAccess(code:string,scope:string):Promise<void>{
           strava_id : token_exchange.athlete.id,
           first_name : token_exchange.athlete.firstname,
           last_name : token_exchange.athlete.lastname,
+          expires_at : moment().add(Number(token_exchange.expires_in), 'seconds'). format('yyyy-MM-DD:hh:mm A')
         }
       )
 
@@ -69,4 +72,44 @@ async saveAccess(code:string,scope:string):Promise<void>{
   
 }
 
+async refreshToken (user : User) : Promise<any>{
+    try{
+       
+      const refreshed =  await strava.oauth.refreshToken(user.refresh_token);
+      // calculates expiration date and updates user with refresh , date and access token 
+      const expires_at =  moment().add(Number(refreshed.expires_in), 'seconds'). format('yyyy-MM-DD:hh:mm A')
+      const update = {
+        expires_at,
+        refresh_token : refreshed.refresh_token,
+        access_token : refreshed.access_token
+      }
+      const userUpdate = this.userRepository.create(update)
+      await this.userRepository.update({strava_id:user.strava_id},userUpdate);
+      
+      return refreshed.access_token;
+
+    }catch(error){
+      throw new ForbiddenException(error)
+    }
+  } 
+
+
+  async getAccessToken(strava_id:number) : Promise<string>{
+    try{
+      
+      const user = await this.userRepository.findOneOrFail({strava_id})
+      let access_token = user.access_token;
+      // if access token is expired  = > refresh  else => return access token
+      if(moment() > moment(user.expires_at))
+      console.log('here')
+         access_token  =  await this.refreshToken(user);
+
+      return access_token;
+      
+   }catch(error){
+
+     throw new NotFoundException(error)
+   }
+
+  }
 }

@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Res, ForbiddenException } from '@nestjs/common';
 import { StravaActivitiesService } from './strava-activities.service';
 import { CreateStravaActivityDto } from './dto/create-strava-activity.dto';
 import { UpdateStravaActivityDto } from './dto/update-strava-activity.dto';
+import strava from 'strava-v3';
 
 @Controller('strava-activities')
 export class StravaActivitiesController {
@@ -12,23 +13,11 @@ export class StravaActivitiesController {
     return this.stravaActivitiesService.create(createStravaActivityDto);
   }
 
-  @Get()
-  findAll() {
-    return this.stravaActivitiesService.findAll();
-  }
+  // gets all activities
+  @Get(':strava_id')
+  async findAll(@Res() res:any,@Param('strava_id',ParseIntPipe) strava_id : number) {
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.stravaActivitiesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStravaActivityDto: UpdateStravaActivityDto) {
-    return this.stravaActivitiesService.update(+id, updateStravaActivityDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.stravaActivitiesService.remove(+id);
+      const activities =  await this.stravaActivitiesService.findAll(strava_id);
+      return res.send(activities)
   }
 }

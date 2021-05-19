@@ -29,6 +29,9 @@ export class User {
 
     @Column({nullable :true})
     strava_id : number;
+
+    @Column({nullable : true})
+    expires_at : Date;
     
     @OneToMany(type=> Item, item => item.user,{
         cascade: true
