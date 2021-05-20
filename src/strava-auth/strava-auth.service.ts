@@ -35,18 +35,13 @@ async saveAccess(code:string,scope:string):Promise<void>{
 
   try{
     const token_exchange = await strava.oauth.getToken(code);
-    console.log(token_exchange)
     // search for a user with the strava id 
     const user  = await this.userRepository.findOne({strava_id:token_exchange.athlete.id});
     // user exists = > update refresh and access token 
     if(user){
-      const updateUser = this.userRepository.create(
-        {
-          access_token:token_exchange.access_token,
-          refresh_token:token_exchange.refresh_token,
-          expires_at : moment().add(Number(token_exchange.expires_in), 'seconds'). format('yyyy-MM-DD:hh:mm A')
-      }); 
-      await this.userRepository.update({strava_id : token_exchange.athlete.id},updateUser)
+      const expires_at =  moment().add(Number(token_exchange.expires_in), 'seconds'). format('yyyy-MM-DD:hh:mm A')
+      const update = new User(new Date(expires_at),token_exchange.refresh_token,token_exchange.access_token)
+      await this.userRepository.update({strava_id : token_exchange.athlete.id},update)
     } // user does not exist => create user 
     else
     {
@@ -78,13 +73,8 @@ async refreshToken (user : User) : Promise<any>{
       const refreshed =  await strava.oauth.refreshToken(user.refresh_token);
       // calculates expiration date and updates user with refresh , date and access token 
       const expires_at =  moment().add(Number(refreshed.expires_in), 'seconds'). format('yyyy-MM-DD:hh:mm A')
-      const update = {
-        expires_at,
-        refresh_token : refreshed.refresh_token,
-        access_token : refreshed.access_token
-      }
-      const userUpdate = this.userRepository.create(update)
-      await this.userRepository.update({strava_id:user.strava_id},userUpdate);
+      const update = new User(new Date(expires_at),refreshed.refresh_token,refreshed.access_token);
+      await this.userRepository.update({strava_id:user.strava_id},update);
       
       return refreshed.access_token;
 
@@ -101,7 +91,6 @@ async refreshToken (user : User) : Promise<any>{
       let access_token = user.access_token;
       // if access token is expired  = > refresh  else => return access token
       if(moment() > moment(user.expires_at))
-      console.log('here')
          access_token  =  await this.refreshToken(user);
 
       return access_token;

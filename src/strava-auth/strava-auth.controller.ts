@@ -12,6 +12,8 @@ export class StravaAuthController {
   @Get()
   async getAccess(@Res() res : any) {
     return res.redirect(await this.stravaAuthService.requestAccess());
+
+
   }
 
   // redirect from strava , gets code and builds refresh and access token => saves to db 

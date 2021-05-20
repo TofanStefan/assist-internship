@@ -38,4 +38,11 @@ export class User {
     })
     item : Item[]
 
+    constructor(expires_at:Date,refresh_token:string,access_token:string){
+        this.expires_at = expires_at;
+        this.refresh_token = refresh_token;
+        this.access_token = access_token;
+
+    }
+
 }
