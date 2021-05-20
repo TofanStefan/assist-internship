@@ -4,7 +4,8 @@ import { CreateItemDto } from '../dto/create-item.dto';
 import { UpdateItemDto } from '../dto/update-item.dto';
 import { Item } from '../entities/item.entity';
 import { UpdateResult } from 'typeorm';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('items')
 @Controller('item')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
