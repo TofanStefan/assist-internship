@@ -10,6 +10,7 @@ import { User } from './user/entities/user.entity';
 import { StravaAuthModule } from './strava-auth/strava-auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { StravaActivitiesModule } from './strava-activities/strava-activities.module';
+import { StravaAssistClubModule } from './strava-assist-club/strava-assist-club.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -27,7 +28,7 @@ import { StravaActivitiesModule } from './strava-activities/strava-activities.mo
       
       }
     ),
-    ItemModule, UserModule, StravaAuthModule, StravaActivitiesModule
+    ItemModule, UserModule, StravaAuthModule, StravaActivitiesModule, StravaAssistClubModule
   ],
   controllers: [AppController],
   providers: [AppService],
