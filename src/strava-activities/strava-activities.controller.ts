@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Res, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Res, ForbiddenException, Redirect } from '@nestjs/common';
 import { StravaActivitiesService } from './strava-activities.service';
 import { CreateStravaActivityDto } from './dto/create-strava-activity.dto';
 import { UpdateStravaActivityDto } from './dto/update-strava-activity.dto';
 import strava from 'strava-v3';
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('strava-activities')
 @Controller('strava-activities')
 export class StravaActivitiesController {
   constructor(private readonly stravaActivitiesService: StravaActivitiesService) {}
