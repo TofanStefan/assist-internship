@@ -20,4 +20,11 @@ export class StravaAssistClubController {
   async getClubMembers(@Param('strava_id') id: number) {
     return this.stravaAssistClubService.getMembers(id);
   }
+
+  @Get(':strava_id/activities/:page_number')
+  async getClubActivities(@Param('strava_id') id: number,@Param('page_number') page_number: number) {
+    return this.stravaAssistClubService.getActivities(id,page_number);
+  }
+
+
 }
