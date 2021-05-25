@@ -16,8 +16,8 @@ export class User {
     last_name : string;
 
     @Column({nullable :true})
-    email : string
-
+    email: string
+    
     @Column({nullable :true})
     password : string;
 
