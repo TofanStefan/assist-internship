@@ -24,7 +24,13 @@ import { StravaAssistClubModule } from './strava-assist-club/strava-assist-club.
         password : process.env.DB_PASSWORD,
         database : process.env.DB_NAME,
         entities : ["dist/**/*.entity{.ts,.js}"],
-        synchronize : true,
+        synchronize: false,
+        migrations: [
+          'dist/src/db/migrations/*.js'
+        ],
+        cli: {
+          migrationsDir: 'src/db/migrations'
+        }
       
       }
     ),

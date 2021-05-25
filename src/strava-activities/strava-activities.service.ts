@@ -26,7 +26,8 @@ export class StravaActivitiesService {
 
     try{
 
-      const activities =  await strava.athlete.listActivities({access_token})
+      const activities = await strava.athlete.listActivities({ access_token })
+      console.log(activities)
       return activities
 
     }catch(error){
