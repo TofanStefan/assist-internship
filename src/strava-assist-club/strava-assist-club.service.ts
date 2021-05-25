@@ -32,4 +32,24 @@ export class StravaAssistClubService {
        throw new ForbiddenException(error);
      }
   }
+
+  
+async getActivities(strava_id : number , page_number :number){
+
+  try{
+    const activities = await strava.clubs.listActivities({
+      id: process.env.STRAVA_ASSIST_CLUB_ID,
+      access_token: await this.stravaAuthService.getAccessToken(strava_id),
+      per_page: 50,
+      page:page_number
+      
+    })
+    return activities;
+
+  }catch(error){
+    throw new ForbiddenException(error);
+  }
+  
+}
+
 }
