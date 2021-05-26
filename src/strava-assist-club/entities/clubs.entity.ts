@@ -1,9 +1,9 @@
-import { Column } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
+@Entity()
 export class Clubs {
-
-    @Column()
-    club_id: number;
+    @PrimaryColumn()
+    id: number;
 
     @Column()
     name: string;
@@ -18,7 +18,7 @@ export class Clubs {
     sport_type: string;
 
     @Column({nullable:true})
-    profile_photo: string;
+    profile: string;
 
     @Column()
     city: string;
@@ -33,9 +33,5 @@ export class Clubs {
     member_count: number;
 
     // club -> club activities relationship to be done 
-
-
-    
-
 
 }

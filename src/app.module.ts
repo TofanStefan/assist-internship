@@ -11,29 +11,11 @@ import { StravaAuthModule } from './strava-auth/strava-auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { StravaActivitiesModule } from './strava-activities/strava-activities.module';
 import { StravaAssistClubModule } from './strava-assist-club/strava-assist-club.module';
+import config  from 'ormconfig'
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
-    TypeOrmModule.forRoot(
-      {
-
-        type : "postgres",
-        host : process.env.DB_HOST,
-        port : Number(process.env.DB_PORT),
-        username : process.env.DB_USERNAME,
-        password : process.env.DB_PASSWORD,
-        database : process.env.DB_NAME,
-        entities : ["dist/**/*.entity{.ts,.js}"],
-        synchronize: false,
-        migrations: [
-          'dist/src/db/migrations/*.js'
-        ],
-        cli: {
-          migrationsDir: 'src/db/migrations'
-        }
-      
-      }
-    ),
+    TypeOrmModule.forRoot(config),
     ItemModule, UserModule, StravaAuthModule, StravaActivitiesModule, StravaAssistClubModule
   ],
   controllers: [AppController],
