@@ -44,6 +44,7 @@ async getActivities(strava_id : number , page_number :number){
       page:page_number
       
     })
+    console.log(activities)
     return activities;
 
   }catch(error){
