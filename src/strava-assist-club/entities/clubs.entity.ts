@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
 @Entity()
 export class Clubs {
     @PrimaryColumn()
-    club_id: number;
+    id: number;
 
     @Column()
     name: string;
@@ -18,7 +18,7 @@ export class Clubs {
     sport_type: string;
 
     @Column({nullable:true})
-    profile_photo: string;
+    profile: string;
 
     @Column()
     city: string;
