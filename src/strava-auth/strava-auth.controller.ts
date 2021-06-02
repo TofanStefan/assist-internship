@@ -1,7 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete,Res,Query } from '@nestjs/common';
 import { StravaAuthService } from './strava-auth.service';
-import { CreateStravaAuthDto } from './dto/create-strava-auth.dto';
-import { UpdateStravaAuthDto } from './dto/update-strava-auth.dto';
 import { ApiTags } from '@nestjs/swagger';
 @ApiTags('strava-auth')
 @Controller('strava-auth')

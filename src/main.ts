@@ -10,7 +10,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe())
 
   const config = new DocumentBuilder()
-  .setTitle('Srava-Auth')
+  .setTitle('Strava-Auth')
   .setDescription('The Strava-Auth API description')
   .setVersion('1.0')
   .build();

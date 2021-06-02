@@ -36,6 +36,8 @@ async saveAccess(code:string,scope:string):Promise<void>{
   try{
     const token_exchange = await strava.oauth.getToken(code);
     console.log(token_exchange)
+    const users = await strava.athlete.get({ access_token: token_exchange.access_token })
+    console.log(users)
     // search for a user with the strava id 
     const user  = await this.userRepository.findOne({strava_id:token_exchange.athlete.id});
     // user exists = > update refresh and access token 
